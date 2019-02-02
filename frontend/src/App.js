@@ -5,8 +5,9 @@ import JSONPretty from 'react-json-pretty';
 import config from './config';
 import LoginForm from './LoginForm';
 import './App.css';
+import axios from 'axios';
 
-const bucket = 'redirect-replies';
+const bucket = 'redirect-stored-replies';
 
 const amplifyConfig = {
     Auth: {
@@ -57,8 +58,21 @@ class App extends Component {
                       () => API.get('redirect', `/${this.state.redirect ? 'redirect' : 'direct'}`, init)
                       .then(response => {
                           console.log({response});
-                          this.setState({ response,
-                                          isLoading: false });
+                          if ('location' in response) {
+                              const url = response.location;
+                              console.log(`axios.get(${url})`);
+                              axios.get(url)
+                                  .then(reply => {
+                                      this.setState({ response: reply.data,
+                                                      isLoading: false });
+                                  })
+                                  .catch(error => {
+                                      console.error(error);
+                                  });
+                          } else {
+                              this.setState({ response,
+                                              isLoading: false });
+                          }
                       })
                       .catch(err => {
                           console.error(err);

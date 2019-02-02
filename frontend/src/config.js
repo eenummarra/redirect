@@ -2,7 +2,6 @@ const dev = {
     APP_NAME: "redirect",
   s3: {
     REGION: "eu-central-1",
-    BUCKET: ""
   },
   apiGateway: {
     REGION: "eu-central-1",
